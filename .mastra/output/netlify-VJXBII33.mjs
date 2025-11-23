@@ -1,11 +1,7 @@
 import { p as MastraError, y as executeHook, B as createWorkflow, z, D as createStep, F as pMap, G as saveScorePayloadSchema, q as convertMessages, H as registerHook, I as AvailableHooks, J as checkEvalStorageFields, K as ModelsDevGateway, N as NetlifyGateway } from './mastra.mjs';
 
-try {
-  process.versions = process.versions || {};
-  process.versions.node = '23.10.0';
-} catch (e) {
-  // Ignore error if process.versions is read-only
-}
+// process.versions = process.versions || {};
+// process.versions.node = '23.10.0';
 
 // src/eval/evaluation.ts
 async function evaluate({
