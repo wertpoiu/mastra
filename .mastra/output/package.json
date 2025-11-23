@@ -10,7 +10,6 @@
   "author": "Mastra",
   "license": "ISC",
   "dependencies": {
-    "typescript": "5.9.3",
     "@opentelemetry/core": "^2.0.1",
     "@opentelemetry/api": "^1.9.0",
     "@opentelemetry/auto-instrumentations-node": "^0.59.0",
