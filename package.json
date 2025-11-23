@@ -1,0 +1,11 @@
+{
+  "scripts": {
+    "build": "mastra build",
+    "start": "mastra start"
+  },
+  "dependencies": {
+    "@mastra/core": "^0.24.5",
+    "@mastra/deployer-cloudflare": "^0.14.22",
+    "mastra": "^0.18.5"
+  }
+}

@@ -1,0 +1,12 @@
+{
+	"servers": {
+		"my-mcp-server-f57db6a7": {
+			"type": "stdio",
+			"command": "-y,",
+			"args": [
+				"@mastra/mcp-docs-server"
+			]
+		}
+	},
+	"inputs": []
+}
