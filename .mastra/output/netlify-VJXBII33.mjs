@@ -1,7 +1,11 @@
 import { p as MastraError, y as executeHook, B as createWorkflow, z, D as createStep, F as pMap, G as saveScorePayloadSchema, q as convertMessages, H as registerHook, I as AvailableHooks, J as checkEvalStorageFields, K as ModelsDevGateway, N as NetlifyGateway } from './mastra.mjs';
 
-process.versions = process.versions || {};
-process.versions.node = '23.10.0';
+try {
+  process.versions = process.versions || {};
+  process.versions.node = '23.10.0';
+} catch (e) {
+  // Ignore error if process.versions is read-only
+}
 
 // src/eval/evaluation.ts
 async function evaluate({
@@ -482,67 +486,67 @@ var scoreTracesWorkflow = createWorkflow({
 scoreTracesWorkflow.then(getTraceStep).commit();
 
 var _virtual__entry = {
-      fetch: async (request, env, context) => {
-        const { mastra } = await import('./mastra.mjs').then(function (n) { return n.L; });
-        const { tools } = await import('./tools.mjs');
-        const {createHonoServer, getToolExports} = await import('./dist-YREX2TJT.mjs').then(function (n) { return n.n; });
-        const _mastra = mastra();
+  fetch: async (request, env, context) => {
+    const { mastra } = await import('./mastra.mjs').then(function (n) { return n.L; });
+    const { tools } = await import('./tools.mjs');
+    const { createHonoServer, getToolExports } = await import('./dist-YREX2TJT.mjs').then(function (n) { return n.n; });
+    const _mastra = mastra();
 
-        if (_mastra.getStorage()) {
-          _mastra.__registerInternalWorkflow(scoreTracesWorkflow);
-        }
+    if (_mastra.getStorage()) {
+      _mastra.__registerInternalWorkflow(scoreTracesWorkflow);
+    }
 
-        registerHook(AvailableHooks.ON_GENERATION, ({ input, output, metric, runId, agentName, instructions }) => {
-          evaluate({
-            agentName,
-            input,
-            metric,
-            output,
-            runId,
-            globalRunId: runId,
-            instructions,
-          });
+    registerHook(AvailableHooks.ON_GENERATION, ({ input, output, metric, runId, agentName, instructions }) => {
+      evaluate({
+        agentName,
+        input,
+        metric,
+        output,
+        runId,
+        globalRunId: runId,
+        instructions,
+      });
+    });
+
+    registerHook(AvailableHooks.ON_EVALUATION, async traceObject => {
+      const storage = _mastra.getStorage();
+      if (storage) {
+        // Check for required fields
+        const logger = _mastra?.getLogger();
+        const areFieldsValid = checkEvalStorageFields(traceObject, logger);
+        if (!areFieldsValid) return;
+
+        await storage.insert({
+          tableName: TABLE_EVALS,
+          record: {
+            input: traceObject.input,
+            output: traceObject.output,
+            result: JSON.stringify(traceObject.result || {}),
+            agent_name: traceObject.agentName,
+            metric_name: traceObject.metricName,
+            instructions: traceObject.instructions,
+            test_info: null,
+            global_run_id: traceObject.globalRunId,
+            run_id: traceObject.runId,
+            created_at: new Date().toISOString(),
+          },
         });
-
-        registerHook(AvailableHooks.ON_EVALUATION, async traceObject => {
-          const storage = _mastra.getStorage();
-          if (storage) {
-            // Check for required fields
-            const logger = _mastra?.getLogger();
-            const areFieldsValid = checkEvalStorageFields(traceObject, logger);
-            if (!areFieldsValid) return;
-
-            await storage.insert({
-              tableName: TABLE_EVALS,
-              record: {
-                input: traceObject.input,
-                output: traceObject.output,
-                result: JSON.stringify(traceObject.result || {}),
-                agent_name: traceObject.agentName,
-                metric_name: traceObject.metricName,
-                instructions: traceObject.instructions,
-                test_info: null,
-                global_run_id: traceObject.globalRunId,
-                run_id: traceObject.runId,
-                created_at: new Date().toISOString(),
-              },
-            });
-          }
-        });
-      
-        const app = await createHonoServer(_mastra, { tools: getToolExports(tools) });
-        return app.fetch(request, env, context);
       }
-    };
+    });
+
+    const app = await createHonoServer(_mastra, { tools: getToolExports(tools) });
+    return app.fetch(request, env, context);
+  }
+};
 
 var modelsDevBL5TAKE6 = /*#__PURE__*/Object.freeze({
-      __proto__: null,
-      ModelsDevGateway: ModelsDevGateway
+  __proto__: null,
+  ModelsDevGateway: ModelsDevGateway
 });
 
 var netlifyVJXBII33 = /*#__PURE__*/Object.freeze({
-      __proto__: null,
-      NetlifyGateway: NetlifyGateway
+  __proto__: null,
+  NetlifyGateway: NetlifyGateway
 });
 
 export { _virtual__entry as _, modelsDevBL5TAKE6 as m, netlifyVJXBII33 as n, scoreTraces as s };
